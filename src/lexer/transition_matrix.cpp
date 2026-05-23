@@ -1,7 +1,6 @@
 #include "transition_matrix.h"
 
 #include <stdexcept>
-#include <iostream>
 #include <sstream>
 
 
@@ -67,10 +66,6 @@ const TransitionMatrix::RawMatrix TransitionMatrix::k_raw_matrix =
 {{" ",199}, {"\n",199}, {"{*}",44}}
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  Preprocessor
-// ─────────────────────────────────────────────────────────────────────────────
-
 void TransitionMatrix::preprocess(const RawMatrix& raw)
 {
     processed_states.resize(raw.size());
@@ -84,17 +79,12 @@ void TransitionMatrix::preprocess(const RawMatrix& raw)
 
             // Wildcard 
             if (key == "{*}") {
-                std::cout << "Wildcard: " << next << ", state: '" << si << "\n"; 
                 state.wildcard = next;
                 continue;
             }
         }
     }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Constructor
-// ─────────────────────────────────────────────────────────────────────────────
 
 TransitionMatrix::TransitionMatrix()
 {

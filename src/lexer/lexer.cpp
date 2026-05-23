@@ -18,11 +18,10 @@ std::vector<Token> Lexer::tokenize(){
     while (i < source.size())
     {
         char c = source[i];
-        int next_state = tm.lookup(state, c); 
-        std::cout << "State: " << state << ", Char: '" << c << "' Next State: " << next_state << "\n"; 
+        int next_state = tm.lookup(state, c);
         if (next_state == -1){
             if(!current_lexeme.empty()){
-                tokens.push_back(Token{Token::Kind::LEXICAL_ERROR, current_lexeme, line, column - static_cast<int>(current_lexeme.size())});
+                tokens.push_back(Token{TokenKind::LEXICAL_ERROR, current_lexeme, line, column - static_cast<int>(current_lexeme.size())});
                 current_lexeme.clear();
             }
             state = 0;
