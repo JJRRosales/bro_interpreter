@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <filesystem>
 
 #include "lexer/lexer.h"
 
@@ -49,12 +50,14 @@ static void print_help(const char* argv0)
         "\n"
         "FLAGS (can be combined):\n"
         "  --verbose    Dump the token list after lexing\n"
+        "  --dump-file  Dump the token list after lexing to a file\n"
         "  --trust-me   Allow any file extension, not just .bro\n"
         "  --dry-run    Lex only, do not execute\n"
         "\n"
         "EXAMPLES:\n"
         "  bro main.bro\n"
         "  bro main.bro --verbose\n"
+        "  bro main.bro --dump-file\n"
         "  bro script.txt --trust-me\n"
         "\n";
 }
@@ -91,6 +94,7 @@ static bool read_file(const std::string& path, std::string& out_source)
 struct Args {
     std::string  file_path;
     bool         verbose  = false;
+    bool         dump_file = false;   // dump tokens to a file instead of console
     bool         trust_me = false;   // skip extension check
     bool         dry_run  = false;   // lex only, no execute
     bool         help     = false;
@@ -107,12 +111,13 @@ static bool parse_args(int argc, char* argv[], Args& out)
     for (int i = 1; i < argc; ++i) {
         const std::string arg = argv[i];
 
-        if      (arg == "--help")    { out.help    = true; }
-        else if (arg == "--no-cap")  { out.version = true; }
-        else if (arg == "--ghost")   { out.ghost   = true; }
-        else if (arg == "--verbose") { out.verbose  = true;}
-        else if (arg == "--trust-me"){ out.trust_me = true;}
-        else if (arg == "--dry-run") { out.dry_run  = true;}
+        if      (arg == "--help")     { out.help      = true;}
+        else if (arg == "--no-cap")   { out.version   = true;}
+        else if (arg == "--ghost")    { out.ghost     = true;}
+        else if (arg == "--verbose")  { out.verbose   = true;}
+        else if (arg == "--dump-file"){ out.dump_file = true;}
+        else if (arg == "--trust-me") { out.trust_me  = true;}
+        else if (arg == "--dry-run")  { out.dry_run   = true;}
         else if (arg[0] != '-') {
             if (!out.file_path.empty()) {
                 std::cerr << "[bro] Bro, one file at a time, chill.\n";
@@ -203,6 +208,29 @@ int main(int argc, char* argv[])
             std::cout << "  │  " << tok.to_string() << "\n";
         }
         std::cout << "  └─────────────────────────────────────────┘\n\n";
+    }
+
+    // ── file dump ─────────────────────────
+    if (args.dump_file) {
+        // Strip the extension, add the suffix, and append .txt
+        std::filesystem::path path(args.file_path);
+        std::string dump_filename = path.stem().string() + "_tokens.txt";
+        
+        std::ofstream dump_out(dump_filename);
+        if (!dump_out.is_open()) {
+            std::cerr << "[bro] Couldn't dump tokens to \"" << dump_filename 
+                      << "\". Guess the OS is rejecting you too.\n";
+            return 1;
+        }
+
+        dump_out << "[bro] Token dump for: " << args.file_path << "\n";
+        dump_out << "┌─────────────────────────────────────────┐\n";
+        for (const auto& tok : tokens) {
+            dump_out << "│  " << tok.to_string() << "\n";
+        }
+        dump_out << "└─────────────────────────────────────────┘\n";
+        
+        std::cout << "[bro] Successfully dumped your tokens to " << dump_filename << "\n";
     }
 
     if (lexer.had_error()) {
