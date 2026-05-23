@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(bro 
-main.cpp
-lexer/transition_matrix.cpp
-lexer/lexer.cpp            
+src/main.cpp
+src/lexer/transition_matrix.cpp
+src/lexer/lexer.cpp            
 )
 
 target_include_directories(bro PRIVATE ${CMAKE_SOURCE_DIR})
