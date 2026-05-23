@@ -194,12 +194,7 @@ int main(int argc, char* argv[])
     // ── Lex ──────────────────────────────────
     Lexer lexer(source, args.file_path);
     std::vector<Token> tokens = lexer.tokenize();
-
-    if (lexer.had_error()) {
-        std::cerr << "[bro] Lexer found issues. Fix your code, bro.\n";
-        return 1;
-    }
-
+    
     // ── Verbose dump ─────────────────────────
     if (args.verbose) {
         std::cout << "[bro] Token dump (you asked for this):\n";
@@ -208,6 +203,11 @@ int main(int argc, char* argv[])
             std::cout << "  │  " << tok.to_string() << "\n";
         }
         std::cout << "  └─────────────────────────────────────────┘\n\n";
+    }
+
+    if (lexer.had_error()) {
+        std::cerr << "[bro] Lexer found issues. Fix your code, bro.\n";
+        return 1;
     }
 
     // ── Dry run ──────────────────────────────

@@ -23,6 +23,7 @@ std::vector<Token> Lexer::tokenize(){
             if(!current_lexeme.empty()){
                 tokens.push_back(Token{TokenKind::LEXICAL_ERROR, current_lexeme, line, column - static_cast<int>(current_lexeme.size())});
                 current_lexeme.clear();
+                m_had_error = true;
             }
             state = 0;
             i += 1;
@@ -35,6 +36,7 @@ std::vector<Token> Lexer::tokenize(){
             if(state >= 200){
                 current_lexeme += c;
                 i += 1;
+                m_had_error = true;
             }
             tokens.push_back(Token{state, current_lexeme, line, column - static_cast<int>(current_lexeme.size())});
             state = 0;

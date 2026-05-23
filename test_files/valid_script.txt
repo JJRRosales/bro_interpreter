@@ -94,11 +94,11 @@ letHimCook noReturn() {
     x = 1 + 1
 }
 
-letHimCook addRef(&a, &b) {
+letHimCook addRef(a, b) {
     sendDat a + b
 }
 
-letHimCook mixed(a, &b) {
+letHimCook mixed(a, b) {
     b = a + b
     sendDat b
 }
