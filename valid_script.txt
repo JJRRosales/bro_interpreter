@@ -1,0 +1,136 @@
+yap This is a single line comment
+
+yapping
+    This is a
+    multiline comment
+stop yapping
+
+yap --- Variable and constant declarations ---
+
+intVar = 10
+floatVar = 3.14
+stringVar = "hello bro"
+boolTrue = legit
+boolFalse = fake
+hexVar = 0xFF
+binVar = 101b
+sciVar = 1.5e6
+complexVar = 1 + 2j
+complexFloat = 1.5 + 2.3j
+
+lockedIn MAX = 100
+lockedIn PI = 3.14159
+lockedIn FLAG = legit
+lockedIn LABEL = "locked in bro"
+
+yap --- Arithmetic expressions ---
+
+result = 10 + 3
+result = 10 - 3
+result = 10 * 3
+result = 10 / 3
+result = 2 + 3 * 4
+result = (2 + 3) * 4
+result = intVar + floatVar
+result = (intVar + 2) * (floatVar - 1)
+
+yap --- Relational and logical operators ---
+
+a = x > y
+a = x < y
+a = x >= y
+a = x <= y
+a = x same y
+a = x aintSame y
+a = x > y andAlso x < 100
+a = x same 0 eitherWay y same 0
+a = nah(x same y)
+
+yap --- if / else-if / else ---
+
+checkDis (score > 90) {
+    grade = "A"
+}
+whatAbout (score > 70) {
+    grade = "B"
+}
+whatAbout (score > 50) {
+    grade = "C"
+}
+otherwise {
+    grade = "F"
+}
+
+yap --- for loop ---
+
+cooking (i = 0; i < 10; i = i + 1) {
+    result = result + i
+}
+
+yap --- while loop ---
+
+cook (i aintSame 10) {
+    i = i + 1
+}
+
+yap --- do-while loop ---
+
+lets {
+    i = i + 1
+} cook (i aintSame 10)
+
+yap --- functions ---
+
+letHimCook add(a, b) {
+    sendDat a + b
+}
+
+letHimCook greet(name) {
+    msg = "hello " + name
+    sendDat msg
+}
+
+letHimCook noReturn() {
+    x = 1 + 1
+}
+
+letHimCook addRef(&a, &b) {
+    sendDat a + b
+}
+
+letHimCook mixed(a, &b) {
+    b = a + b
+    sendDat b
+}
+
+yap --- function calls ---
+
+out = add(1, 2)
+out = add(intVar, 10)
+out = greet("bro")
+out = mixed(5, intVar)
+noReturn()
+
+yap --- nested structures ---
+
+letHimCook compute(x, y) {
+    checkDis (x > y) {
+        cooking (i = 0; i < x; i = i + 1) {
+            x = x - 1
+        }
+    }
+    otherwise {
+        cook (y aintSame 0) {
+            y = y - 1
+        }
+    }
+    sendDat x + y
+}
+
+yap --- complex number edge cases ---
+
+c1 = 5j
+c2 = 0 + 5j
+c3 = 1.5 + 0j
+c4 = 100 + 3.14j
+c5 = 0.001 + 0.001j

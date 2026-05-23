@@ -1,0 +1,67 @@
+yap --- lexical (general) error ---
+
+.
+¿
+¡
+
+yap --- integer error ---
+
+0_
+0$
+
+yap --- hexadecimal error ---
+
+0xJ
+0x$
+0x_
+0x$
+0x.
+
+yap --- binary error ---
+
+0b0
+0b5
+0b.
+0ba
+
+yap --- float error ---
+
+0.a
+0._
+0.$
+
+yap --- imaginary error ---
+
+0ja
+0j$
+0j'
+
+yap --- scientific error ---
+0ea
+0e*
+0e
+0e0a
+0e0$
+
+
+yap --- relational operator error ---
+
+!-
+!/
+!$
+
+yap --- logical operator error ---
+
+&$
+&0
+&a
+&/
+|$
+|0
+|a
+|/
+
+yap --- id error ---
+
+0y
+10y
