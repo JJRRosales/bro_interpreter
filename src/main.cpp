@@ -197,7 +197,7 @@ int main(int argc, char* argv[])
     }
 
     // ── Lex ──────────────────────────────────
-    Lexer lexer(source, args.file_path);
+    Lexer lexer(source);
     std::vector<Token> tokens = lexer.tokenize();
     
     // ── Verbose dump ─────────────────────────
@@ -212,7 +212,6 @@ int main(int argc, char* argv[])
 
     // ── file dump ─────────────────────────
     if (args.dump_file) {
-        // Strip the extension, add the suffix, and append .txt
         std::filesystem::path path(args.file_path);
         std::string dump_filename = path.stem().string() + "_tokens.txt";
         
@@ -223,7 +222,9 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        dump_out << "[bro] Token dump for: " << args.file_path << "\n";
+        dump_out << "[bro] Token dump for: " << args.file_path << 
+        (lexer.had_error()? " (errors encountered)" : " (error free Nice!!)") << "\n";
+
         dump_out << "┌─────────────────────────────────────────┐\n";
         for (const auto& tok : tokens) {
             dump_out << "│  " << tok.to_string() << "\n";

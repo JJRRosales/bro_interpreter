@@ -1,8 +1,6 @@
 yap --- lexical (general) error ---
 
 .
-¿
-¡
 
 yap --- integer error ---
 
