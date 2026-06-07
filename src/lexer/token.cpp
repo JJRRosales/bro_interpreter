@@ -42,7 +42,8 @@ void Token::check_and_set_keyword()
         {"cook",       TokenKind::KW_COOK},
         {"lets",       TokenKind::KW_LETS},
         {"letHimCook", TokenKind::KW_LETHIMCOOK},
-        {"sendDat",    TokenKind::KW_SENDDAT}
+        {"sendDat",    TokenKind::KW_SENDDAT},
+        {"ghosted",    TokenKind::KW_GHOSTED}
     };
 
     auto it = KEYWORD_MAP.find(lexeme);
@@ -82,6 +83,14 @@ std::string Token::kind_to_string() const
         {TokenKind::MULT, "MULT"},
         {TokenKind::MINUS, "MINUS"},
         {TokenKind::DIV, "DIV"},
+        {TokenKind::MOD, "MOD"},
+        {TokenKind::PLUS_ASSIGN, "PLUS_ASSIGN"},
+        {TokenKind::MINUS_ASSIGN, "MINUS_ASSIGN"},
+        {TokenKind::MOD, "MOD"},
+        {TokenKind::MULT_ASSIGN, "MULT_ASSIGN"},
+        {TokenKind::DIV_ASSIGN, "DIV_ASSIGN"},
+        {TokenKind::INC, "INC"},
+        {TokenKind::DEC, "DEC"},
         {TokenKind::V_STRING, "V_STRING"},
         {TokenKind::COMMENT, "COMMENT"},
         {TokenKind::LEXICAL_ERROR, "LEXICAL_ERROR"},
@@ -109,7 +118,9 @@ std::string Token::kind_to_string() const
         {TokenKind::KW_COOK, "KW_COOK"},
         {TokenKind::KW_LETS, "KW_LETS"},
         {TokenKind::KW_LETHIMCOOK, "KW_LETHIMCOOK"},
-        {TokenKind::KW_SENDDAT, "KW_SENDDAT"}
+        {TokenKind::KW_SENDDAT, "KW_SENDDAT"},
+        {TokenKind::KW_GHOSTED, "KW_GHOSTED"}
+
     };
     auto it = names.find(kind);
 

@@ -38,8 +38,17 @@ enum class TokenKind
         MULT = 124,
         MINUS = 125,
         DIV = 126,
+        MOD = 127,
 
-        V_STRING = 127,
+        PLUS_ASSIGN = 128,
+        MINUS_ASSIGN = 129,
+        MULT_ASSIGN = 130,
+        DIV_ASSIGN = 131,
+
+        INC = 132,
+        DEC = 133,
+
+        V_STRING = 134,
         COMMENT = 199,
 
         // Errors
@@ -70,7 +79,8 @@ enum class TokenKind
         KW_COOK,
         KW_LETS,
         KW_LETHIMCOOK,
-        KW_SENDDAT
+        KW_SENDDAT,
+        KW_GHOSTED
     };
 
 struct Token

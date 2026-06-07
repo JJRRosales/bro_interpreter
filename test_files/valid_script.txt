@@ -29,10 +29,21 @@ result = 10 + 3
 result = 10 - 3
 result = 10 * 3
 result = 10 / 3
+result = 10 % 3
 result = 2 + 3 * 4
 result = (2 + 3) * 4
 result = intVar + floatVar
 result = (intVar + 2) * (floatVar - 1)
+result++
+result--
+++result
+--result
+result += 1
+result -= 1
+result *= 1
+result /= 1
+result = ghosted
+
 
 yap --- Relational and logical operators ---
 
