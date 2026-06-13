@@ -7,6 +7,7 @@
 #include <filesystem>
 
 #include "lexer/lexer.h"
+#include "parser/parser.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -246,6 +247,13 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    Parser parser(tokens);
+    try {
+        parser.parse();
+    }catch (const std::runtime_error& e){
+        std::cerr << "[bro] Syntax error: " << e.what() << "\n";
+        return 1;
+    }
     // ── Hand off to interpreter (TODO: your code here) ──
     //
     //   Parser parser(tokens);

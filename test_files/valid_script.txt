@@ -36,8 +36,8 @@ result = intVar + floatVar
 result = (intVar + 2) * (floatVar - 1)
 result++
 result--
-++result
---result
+yap ++result this is not supported by the grammar (yet)
+yap --result 
 result += 1
 result -= 1
 result *= 1
@@ -93,12 +93,12 @@ lets {
 yap --- functions ---
 
 letHimCook add(a, b) {
-    sendDat a + b
+    sendDat a + b;
 }
 
 letHimCook greet(name) {
     msg = "hello " + name
-    sendDat msg
+    sendDat msg;
 }
 
 letHimCook noReturn() {
@@ -106,12 +106,12 @@ letHimCook noReturn() {
 }
 
 letHimCook addRef(a, b) {
-    sendDat a + b
+    sendDat a + b;
 }
 
 letHimCook mixed(a, b) {
     b = a + b
-    sendDat b
+    sendDat b;
 }
 
 yap --- function calls ---
@@ -135,7 +135,7 @@ letHimCook compute(x, y) {
             y = y - 1
         }
     }
-    sendDat x + y
+    sendDat x + y;
 }
 
 yap --- complex number edge cases ---
@@ -144,4 +144,4 @@ c1 = 5j
 c2 = 0 + 5j
 c3 = 1.5 + 0j
 c4 = 100 + 3.14j
-c5 = 0.001 + 0.001j
+c5 = 0.001 + 0.001j 
