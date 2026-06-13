@@ -77,6 +77,7 @@ std::string Token::kind_to_string() const
         {TokenKind::RBRACE, "RBRACE"},
         {TokenKind::COLON, "COLON"},
         {TokenKind::SEMICOLON, "SEMICOLON"},
+        {TokenKind::COMMA, "COMMA"},
         {TokenKind::ID, "ID"},
         {TokenKind::ASSIGN, "ASSIGN"},
         {TokenKind::PLUS, "PLUS"},
