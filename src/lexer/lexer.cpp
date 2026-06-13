@@ -8,8 +8,8 @@ std::vector<Token> Lexer::tokenize(){
     TransitionMatrix tm;
 
     int state  = 0;
-    int line   = 0;
-    int column = 0;
+    int line   = 1;
+    int column = 1;
     int i      = 0;
     std::string current_lexeme;
     int lexeme_start_line   = 1;
@@ -66,5 +66,6 @@ std::vector<Token> Lexer::tokenize(){
         else           { ++column; }
         ++i;
     }
+    tokens.push_back(Token{TokenKind::Eof, "", line, column});
     return tokens;
 }
