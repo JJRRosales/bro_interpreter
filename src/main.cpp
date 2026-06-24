@@ -8,6 +8,7 @@
 
 #include "lexer/lexer.h"
 #include "parser/parser.h"
+#include "semantic/semantic_analyzer.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -43,17 +44,19 @@ static void print_help(const char* argv0)
     std::cout <<
         "USAGE:\n"
         "  " << argv0 << " <file.bro>            Run a .bro file like the chad you are\n"
-        "  " << argv0 << " <file.bro> --verbose  Print tokens so you can feel smart\n"
-        "  " << argv0 << " <file.bro> --trust-me Skip the file-extension check (bold move)\n"
-        "  " << argv0 << " --no-cap              Print version info, no cap\n"
-        "  " << argv0 << " --help                Show this help (you clearly need it)\n"
-        "  " << argv0 << " --ghost               Exit immediately\n"
+        "  " << argv0 << " <file.bro> --verbose      Print tokens so you can feel smart\n"
+        "  " << argv0 << " <file.bro> --trust-me    Skip the file-extension check (bold move)\n"
+        "  " << argv0 << " --no-cap                 Print version info, no cap\n"
+        "  " << argv0 << " --help                   Show this help (you clearly need it)\n"
+        "  " << argv0 << " --ghost                  Exit immediately\n"
         "\n"
         "FLAGS (can be combined):\n"
-        "  --verbose    Dump the token list after lexing\n"
-        "  --dump-file  Dump the token list after lexing to a file\n"
-        "  --trust-me   Allow any file extension, not just .bro\n"
-        "  --dry-run    Lex only, do not execute\n"
+        "  --verbose       Dump the token list after lexing\n"
+        "  --dump-file     Dump the token list after lexing to a file\n"
+        "  --dump-ast      Print the Abstract Syntax Tree after parsing\n"
+        "  --dump-symbols  Print the symbol table after semantic analysis\n"
+        "  --trust-me      Allow any file extension, not just .bro\n"
+        "  --dry-run       Lex only, do not execute\n"
         "\n"
         "EXAMPLES:\n"
         "  bro main.bro\n"
@@ -94,13 +97,15 @@ static bool read_file(const std::string& path, std::string& out_source)
 // ─────────────────────────────────────────────
 struct Args {
     std::string  file_path;
-    bool         verbose  = false;
-    bool         dump_file = false;   // dump tokens to a file instead of console
-    bool         trust_me = false;   // skip extension check
-    bool         dry_run  = false;   // lex only, no execute
-    bool         help     = false;
-    bool         version  = false;
-    bool         ghost    = false;   // exit immediately
+    bool         verbose      = false;
+    bool         dump_file    = false;   // dump tokens to a file instead of console
+    bool         dump_ast     = false;   // print the AST after parsing
+    bool         dump_symbols = false;   // print symbol table after semantic analysis
+    bool         trust_me     = false;   // skip extension check
+    bool         dry_run      = false;   // lex only, no execute
+    bool         help         = false;
+    bool         version      = false;
+    bool         ghost        = false;   // exit immediately
 };
 
 static bool parse_args(int argc, char* argv[], Args& out)
@@ -112,13 +117,15 @@ static bool parse_args(int argc, char* argv[], Args& out)
     for (int i = 1; i < argc; ++i) {
         const std::string arg = argv[i];
 
-        if      (arg == "--help")     { out.help      = true;}
-        else if (arg == "--no-cap")   { out.version   = true;}
-        else if (arg == "--ghost")    { out.ghost     = true;}
-        else if (arg == "--verbose")  { out.verbose   = true;}
-        else if (arg == "--dump-file"){ out.dump_file = true;}
-        else if (arg == "--trust-me") { out.trust_me  = true;}
-        else if (arg == "--dry-run")  { out.dry_run   = true;}
+        if      (arg == "--help")         { out.help         = true; }
+        else if (arg == "--no-cap")       { out.version      = true; }
+        else if (arg == "--ghost")        { out.ghost        = true; }
+        else if (arg == "--verbose")      { out.verbose      = true; }
+        else if (arg == "--dump-file")    { out.dump_file    = true; }
+        else if (arg == "--dump-ast")     { out.dump_ast     = true; }
+        else if (arg == "--dump-symbols") { out.dump_symbols = true; }
+        else if (arg == "--trust-me")     { out.trust_me     = true; }
+        else if (arg == "--dry-run")      { out.dry_run      = true; }
         else if (arg[0] != '-') {
             if (!out.file_path.empty()) {
                 std::cerr << "[bro] Bro, one file at a time, chill.\n";
@@ -247,22 +254,43 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    // ── Parse → AST ──────────────────────────────────────────────────
     Parser parser(tokens);
+    std::unique_ptr<ProgramNode> ast;
     try {
-        parser.parse();
-    }catch (const std::runtime_error& e){
+        ast = parser.parse();
+    } catch (const std::runtime_error& e) {
         std::cerr << "[bro] Syntax error: " << e.what() << "\n";
         return 1;
     }
-    // ── Hand off to interpreter (TODO: your code here) ──
-    //
-    //   Parser parser(tokens);
-    //   auto ast = parser.parse();
-    //   Interpreter interp;
-    //   interp.execute(ast);
-    //
-    std::cout << "[bro] Interpreter not hooked up yet. "
-                 "Lexer ran successfully though, so that's a W.\n";
+
+    // ── AST dump ─────────────────────────────────────────────────────
+    if (args.dump_ast) {
+        std::cout << "[bro] AST dump:\n";
+        std::cout << ast->to_string() << "\n\n";
+    }
+
+    // ── Semantic analysis ─────────────────────────────────────────────
+    SemanticAnalyzer analyzer;
+    analyzer.analyze(*ast);
+
+    if (analyzer.had_errors()) {
+        std::cerr << "[bro] Semantic errors found — fix your code, bro:\n";
+        for (const auto& err : analyzer.errors()) {
+            std::cerr << "  [line " << err.line << ", col " << err.col
+                      << "] " << err.message << "\n";
+        }
+        return 1;
+    }
+
+    // ── Symbol table dump ─────────────────────────────────────────────
+    if (args.dump_symbols) {
+        std::cout << "[bro] Symbol table dump:\n";
+        analyzer.dump_symbols();
+    }
+
+    std::cout << "[bro] Parsed and analyzed successfully. Big W.\n"
+                 "[bro] Interpreter execution not hooked up yet — coming soon.\n";
 
     return 0;
 }
