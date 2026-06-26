@@ -12,6 +12,7 @@ Parser::Parser(const std::vector<Token>& tokens)
     : m_tokens(tokens) {}
 
 std::unique_ptr<ProgramNode> Parser::parse() {
+    validate_syntax();
     return parse_program();
 }
 
