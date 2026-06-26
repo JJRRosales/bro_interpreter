@@ -15,6 +15,7 @@ public:
     std::unique_ptr<ProgramNode> parse();
 
 private:
+    void validate_syntax();
     std::vector<Token> m_tokens;
     size_t             m_pos = 0;
 
