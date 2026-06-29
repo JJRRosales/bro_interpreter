@@ -276,8 +276,44 @@ void SemanticAnalyzer::visit(IdentifierNode& n) {
 }
 
 void SemanticAnalyzer::visit(BinaryExprNode& n) {
+    // 1. Visit children first to catch deeply nested errors
     n.left->accept(*this);
     n.right->accept(*this);
+
+    // 2. Infer the types of the left and right expressions
+    ValueType left_type = infer_expr_type(*n.left);
+    ValueType right_type = infer_expr_type(*n.right);
+
+    // If either is unknown (perhaps due to a previous undeclared variable), 
+    // bail out to prevent cascading dummy errors.
+    if (left_type == ValueType::Unknown || right_type == ValueType::Unknown) {
+        return; 
+    }
+
+    // 3. Perform Type Verification
+    // Assuming your token operator can be checked via lexeme (e.g., "+") or kind (e.g., TokenKind::OP_PLUS)
+    std::string op_str = n.op.lexeme; 
+
+    if (op_str == "+") {
+        // Prevent String + Non-String and Non-String + String
+        if (left_type == ValueType::String && right_type != ValueType::String) {
+            error("TypeError: Cannot concatenate String with a different type.", n.op.line, n.op.column);
+        } else if (left_type != ValueType::String && right_type == ValueType::String) {
+            error("TypeError: Cannot add a different type to a String.", n.op.line, n.op.column);
+        }
+    } 
+    else if (op_str == "-" || op_str == "*" || op_str == "/") {
+        // Prevent math operations on strings entirely
+        if (left_type == ValueType::String || right_type == ValueType::String) {
+            error("TypeError: Invalid arithmetic operation ('" + op_str + "') on String.", n.op.line, n.op.column);
+        }
+        
+        // Add boolean checks (e.g., true * 5 is usually invalid)
+        if (left_type == ValueType::Bool || right_type == ValueType::Bool) {
+            error("TypeError: Invalid arithmetic operation on Boolean.", n.op.line, n.op.column);
+        }
+    }
+    // You can add logic for relational operators (==, !=, <, >) here too
 }
 
 void SemanticAnalyzer::visit(UnaryExprNode& n) {
