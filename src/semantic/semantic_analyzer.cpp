@@ -56,6 +56,15 @@ void SemanticAnalyzer::visit_stmt_list(std::vector<std::unique_ptr<StmtNode>>& s
 // ─────────────────────────────────────────────────────────────────────────────
 void SemanticAnalyzer::visit(ProgramNode& n) {
     m_table.push_scope(); // open global scope — kept alive for dump_symbols()
+
+    // Pre-declare built-in 'print' function
+    Symbol print_sym;
+    print_sym.name = "print";
+    print_sym.kind = SymbolKind::Function;
+    print_sym.type = ValueType::Null;
+    print_sym.param_count = 1; // variadic
+    m_table.declare(print_sym);
+
     visit_stmt_list(n.stmts);
     // NOTE: global scope is intentionally NOT popped so dump_symbols() works.
 }

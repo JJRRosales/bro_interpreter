@@ -1,0 +1,17 @@
+yap --- Syntactically INVALID script ---
+
+
+yap ERROR 1: Missing right operand after operator ---
+x = 42 +
+
+yap ERROR 2: Incomplete if (missing parenthesis and brace) ---
+checkdis (x same 1 {
+
+yap ERROR 3: Random orphaned operator ---
+y = x * * 3
+
+yap ERROR 4: Unclosed parenthesis ---
+z = (x + y
+
+yap ERROR 5: Missing expression after 'lockedin' ---
+lockedin

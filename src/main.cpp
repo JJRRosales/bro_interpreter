@@ -9,6 +9,7 @@
 #include "lexer/lexer.h"
 #include "parser/parser.h"
 #include "semantic/semantic_analyzer.h"
+#include "interpreter/interpreter.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -289,8 +290,12 @@ int main(int argc, char* argv[])
         analyzer.dump_symbols();
     }
 
-    std::cout << "[bro] Parsed and analyzed successfully. Big W.\n"
-                 "[bro] Interpreter execution not hooked up yet — coming soon.\n";
+    // ── Interpreter execution ─────────────────────────────────────────
+    std::cout << "[bro] Parsed and analyzed successfully. Executing...\n\n";
+
+    Interpreter interpreter;
+    interpreter.interpret(*ast);
+    interpreter.dump_globals();
 
     return 0;
 }

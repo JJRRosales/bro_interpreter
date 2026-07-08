@@ -1,4 +1,4 @@
-yap --- Semantically INVALID script ---
+yap --- Semantically INVALID script —
 yap This file intentionally contains semantic errors to test the analyzer.
 
 yap --- ERROR 1: UndeclaredVariable ---
@@ -34,3 +34,4 @@ letHimCook badFunc(a) {
 yap --- This one is valid (declared before use) ---
 good = 42
 good = good + 1
+
